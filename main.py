@@ -10,6 +10,8 @@ from datetime import date
 import datetime
 import numpy as np
 from operator import itemgetter
+import json
+from clases.Admin import Admin
 
 #c= Club('river', '1903', 'corrientes 912')
 clubes=[] #lista con OBJETOS club de la CLASE Club
@@ -62,17 +64,17 @@ def ingreso(archivo):
     match opcion:
         case 1:
             usuario = input("Ingrese usuario: ")
-            txt = open(archivo,"r",encoding="utf-8")
-            matrizUsuCon = []
-            for linea in txt:
-                uc = linea[:-1].split(",")
-                matrizUsuCon.append(uc)
-            txt.close()
-            esta=True
+            with open('admins.json', 'r') as f:
+                try:
+                    jsonData = json.load(f)
+                    f.close()
+                except json.decoder.JSONDecodeError:
+                    jsonData = []
+                    esta = False
             while esta==True:
                 encontro = False
-                for i in range(len(matrizUsuCon)):
-                    if matrizUsuCon[i][0] == usuario:
+                for i in range(jsonData):
+                    if  jsonData["usuario"]== usuario:
                         encontro=True
                 if encontro == True:
                     usuario = input("Este nombre de usuario ya existe, utilice otro: ")
@@ -83,9 +85,10 @@ def ingreso(archivo):
             apellido=verificarInputSinNumeros("Ingrese su apellido: ", "Ingreso invalido. Ingrese su apellido: ")
             dni=verificarNumeroInput("Ingrese su DNI: ", "Ingreso invalido: ")
             email=verificarInputMail()
-            txt = open(archivo,"a",encoding="utf-8")
-            txt.write(usuario + "," + contrasenia + "," + nombre + "," +apellido + "," +str(dni) + "," +email +'\n')
-            txt.close()
+            usu = Admin(nombre, apellido, dni, email, usuario, contrasenia).__dict__
+            with open("admins.json", 'w') as file:
+                js = json.dumps(usu)
+                file.write(js)
             menuPrincipal()
         case 2:
             usuario = input("Ingrese usuario: ")
