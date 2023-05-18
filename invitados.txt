@@ -1,0 +1,4 @@
+pepi,apelpepi,123124,pipi@algo.com,1
+manu,ejbe,1234,pipi@gmail.com,2
+tomi,mest,12324,pipi@gmail.com,3
+frachu,palmi,1214,pipi@hotmail.com,1

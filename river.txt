@@ -1,0 +1,1 @@
+manu,ejbe,M,20,4455566,1,manu@ejbe.com|tomi,mester,M,24,44333222,2,tomi@mester.com|france,virgolin,M,35,33222333,3,fran@cesco.com|salva,luna,M,65,22333111,4,salva@luna.com~canchita,o futebol,08:00,20:00,1-2020,8,17,8,17~912000,2020,12,17,,,~
