@@ -1,0 +1,18 @@
+[
+  {
+    "nombre": "Thomas",
+    "apellido": "Mester",
+    "sexo": 45014424,
+    "edad": "tomi@mester.com",
+    "usuario": "tomi",
+    "contrasenia": "1234"
+  },
+  {
+    "nombre": "Manuel",
+    "apellido": "Ejeberobich",
+    "DNI": 44333222,
+    "email": "manu@e.com",
+    "usuario": "manu",
+    "contrasenia": "4321"
+  }
+]
