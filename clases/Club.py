@@ -5,12 +5,9 @@ from clases.Pago import Pago
 from clases.Reserva import Reserva
 import datetime
 from array import array
+from auxiliares import splitearLista
 
-def splitearLista(lista, var):
-        ##recibe una lista de strings a splitear
-        for i in range(len(lista)):
-            lista[i] = lista[i].split(var)
-        return lista
+
 class Club:
     lista_nombres = []
 
@@ -47,8 +44,6 @@ class Club:
         self.clasificacion.extend([menores,adultos,mayores])
         return self.clasificacion
     
-    
-
     def guardarClub(self):
         socios_text = ""
         inst_text = ""
