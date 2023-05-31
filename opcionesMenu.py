@@ -3,7 +3,43 @@ from auxiliares import *
 import matplotlib.pyplot as plt
 from datetime import date
 from operator import itemgetter
-from main import *
+from clases.Club import *
+from clases.Socio import *
+from clases.Instalacion import *
+from clases.Reserva import *
+from clases.Empleado import *
+from clases.Pago import *
+clubes = []
+
+
+def guardarListaClubes():
+    club_text = ''
+    for c in clubes:
+        club_text += c.nombre + ',' + \
+            str(c.anioFundacion) + ',' + c.direccion + '|'
+    with open("clubes.txt", "w") as f:
+        f.write(club_text)
+
+
+def getListaClubes():
+    return clubes
+
+
+def inicializarListaClubes():
+    with open('clubes.txt', 'r') as d:
+        text = d.read()
+        ListaClubes = text.split('|')
+        ListaClubes = splitearLista(ListaClubes, ',')
+        for i in range(len(ListaClubes)):
+            if ListaClubes[i] != ['']:
+                clubes.append(Club(*ListaClubes[i]))
+
+
+def inicializar():
+    inicializarListaClubes()
+    for c in clubes:
+        c.inicializarClub()
+
 
 def eliminarInvitado():
     with open('invitados.txt', 'r') as f:
@@ -59,46 +95,6 @@ def visualizarInvitadosMenosAcceso():
     plt.show()
 
 
-def actualizarDatosInvitado():
-    with open('invitados.txt', 'r', encoding='utf-8') as f:
-        datos = f.read()
-        datos = datos.split('\n')
-        datos = splitearLista(datos, ',')
-        encontrado = False
-        dni = verificarNumeroInput('Ingresar DNI del usuario a actualizar los datos: ',
-                                   'Usuario invalido. Ingrese DNI del usuario para actualizar sus datos: ')
-        correo = verificarInputConNumeros("Ingrese el correo del invitado al que le quiere actualizar los datos: ",
-                                          "Correo invalido. Ingrese el correo del invitado al que le quiere actualizar los datos: ")
-        for i in range(len(datos)):
-            if datos[i] != [''] and int(datos[i][2]) == dni and datos[i][3] == correo:
-                encontrado = True
-                indice = i
-        if not encontrado:
-            print("El invitado no esta registrado")
-            case3()
-        else:
-            print("Actualizacion de datos")
-            nombre = verificarInputSinNumeros(
-                'Ingresar su nombre para actualizarlo: ', 'Nombre invalido. Ingrese su nombre para actualizarlo: ')
-            apellido = verificarInputSinNumeros(
-                'Ingresar su apellido para actualizarlo: ', 'Apellido invalido. Ingrese su apellido para actualizarlo: ')
-            correo = verificarInputConNumeros(
-                "Ingrese su correo para actualizarlo: ", "Correo invalido. Ingrese su correo para actualizarlo: ")
-            datos[indice][0] = nombre
-            datos[indice][1] = apellido
-            datos[indice][3] = correo
-            aEscribir = ''
-            for j in range(len(datos)):
-                if datos[j] != ['']:
-                    aEscribir += datos[j][0] + ',' + datos[j][1] + ',' + \
-                        datos[j][2] + ',' + datos[j][3] + \
-                        ',' + datos[j][4] + '\n'
-
-            with open('invitados.txt', 'w', encoding='utf-8') as g:
-                g.write(aEscribir)
-            print('Invitado actualizado exitosamente')
-
-
 def cambiarContrasenaUsuario():
     with open('archivo.txt', 'r', encoding='utf-8') as f:
         datos = f.read()
@@ -150,11 +146,11 @@ def mostrarInvitados():
 def clubGrafico():
     nombreClub = input(
         "Ingrese el nombre del club que quiere consultar informacion: ")
-    datos = verificarExistenciaClub(nombreClub)
+    datos = verificarExistenciaClub(nombreClub, clubes)
     while (datos[0] == False):
         nombreClub = input(
             "Ese club no existe. Ingrese el nombre del club que quiere consultar informacion: ")
-        datos = verificarExistenciaClub(nombreClub)
+        datos = verificarExistenciaClub(nombreClub, clubes)
     for socio in clubes[datos[1]].lista_socios:
         clubes[datos[1]].agregaEdad(socio.edad)
     clubes[datos[1]].clasifica()
@@ -183,6 +179,7 @@ def finalizarPrograma():
 
 
 def registrarClub():
+    agrega = True
     nombre = verificarInputClub(
         "Ingrese el nombre del club: ", "Ingrese un nombre de club valido: ")
     anioFundacionInt = verificarNumeroInput(
@@ -193,20 +190,20 @@ def registrarClub():
         club = Club(nombre, anioFundacionInt, direccion)
     except ValueError:
         print("Ese nombre ya existe")
-        return menuPrincipal()
-    clubes.append(club)
-
-    print("Se ha registrado el club exitosamente")
+        agrega = False
+    if agrega:
+        clubes.append(club)
+        print("Se ha registrado el club exitosamente")
 
 
 def consultarInfoClub():
     nombreClub = input(
         "Ingrese el nombre del club que quiere consultar informacion: ")
-    datos = verificarExistenciaClub(nombreClub)
+    datos = verificarExistenciaClub(nombreClub, clubes)
     while (datos[0] == False):
         nombreClub = input(
             "Ese club no existe. Ingrese el nombre del club que quiere consultar informacion: ")
-        datos = verificarExistenciaClub(nombreClub)
+        datos = verificarExistenciaClub(nombreClub, clubes)
     clubes[datos[1]].presentacion()
 
 
@@ -226,11 +223,11 @@ def registrarSocio():
     correoElectronico = verificarInputMail()
     nombreClub = input(
         "Ingrese el nombre del club en el que desea registrar el socio: ")
-    datos = verificarExistenciaClub(nombreClub)
+    datos = verificarExistenciaClub(nombreClub, clubes)
     while (datos[0] == False):
         nombreClub = input(
             "Club inexistente. Ingrese el nombre del club en el que desea registrar el socio: ")
-        datos = verificarExistenciaClub(nombreClub)
+        datos = verificarExistenciaClub(nombreClub, clubes)
     socio = Socio(nombre, apellido, sexo, edadInt,
                   dniInt, nroSocioInt, correoElectronico)
     clubes[datos[1]].agregarSocio(socio)
@@ -239,11 +236,11 @@ def registrarSocio():
 def eliminarSocio():
     nombreClub = input(
         "Ingrese el nombre del club en el que desea eliminar un socio: ")
-    datos = verificarExistenciaClub(nombreClub)
+    datos = verificarExistenciaClub(nombreClub, clubes)
     while (datos[0] == False):
         nombreClub = input(
             "Club inexistente. Ingrese el nombre del club en el que desea eliminar un socio: ")
-        datos = verificarExistenciaClub(nombreClub)
+        datos = verificarExistenciaClub(nombreClub, clubes)
     nroSocioInt = verificarNumeroInput(
         "Ingrese el numero de socio del socio que desea eliminar: ", "Numero de socio invalido. Intente nuevamente")
     clubes[datos[1]].eliminarSocio(nroSocioInt)
@@ -251,11 +248,11 @@ def eliminarSocio():
 
 def consultarSocios():
     nombreClub = input("Ingrese el club del que quiere consultar los socios: ")
-    datos = verificarExistenciaClub(nombreClub)
+    datos = verificarExistenciaClub(nombreClub, clubes)
     while (datos[0] == False):
         nombreClub = input(
             "Nombre de club inexistente. Ingrese el club del que quiere consultar los socios: ")
-        datos = verificarExistenciaClub(nombreClub)
+        datos = verificarExistenciaClub(nombreClub, clubes)
     for j in range(len(clubes[datos[1]].lista_socios)):
         print("Nombre:", clubes[datos[1]].lista_socios[j].nombre, ", Apellido:", clubes[datos[1]].lista_socios[j].apellido,
               ", DNI:", clubes[datos[1]].lista_socios[j].DNI, ", Edad:", clubes[datos[1]].lista_socios[j].edad, '\n')
@@ -274,11 +271,11 @@ def registrarInstalacion():
         "Ingrese el codigo de la instalacion que desea registrar: ", "Ingrese un codigo de instalacion valido: ")
     nombreClub = input(
         "Ingrese el nombre del club en el que desea registrar la instalacion: ")
-    datos = verificarExistenciaClub(nombreClub)
+    datos = verificarExistenciaClub(nombreClub, clubes)
     while (datos[0] == False):
         nombreClub = input(
             "Club inexistente. Ingrese el nombre del club en el que desea registrar la instalacion: ")
-        datos = verificarExistenciaClub(nombreClub)
+        datos = verificarExistenciaClub(nombreClub, clubes)
     instalacion = Instalacion(
         nombre, descripcion, horaApertura, horaCierre, codigoInstalacionInt)
     clubes[datos[1]].agregarInstalacion(instalacion)
@@ -287,11 +284,11 @@ def registrarInstalacion():
 def eliminarInstalacion():
     nombreClub = input(
         "Ingrese el nombre del club en el que desea eliminar una instalacion: ")
-    datos = verificarExistenciaClub(nombreClub)
+    datos = verificarExistenciaClub(nombreClub, clubes)
     while (datos[0] == False):
         nombreClub = input(
             "Club inexistente. Ingrese el nombre del club en el que desea eliminar una instalacion: ")
-        datos = verificarExistenciaClub(nombreClub)
+        datos = verificarExistenciaClub(nombreClub, clubes)
     codigoInstalacionInt = verificarNumeroInput(
         "Ingrese el codigo de la instalacion que desea eliminar: ", "Ingrese un codigo de instalacion valido: ")
     clubes[datos[1]].eliminarInstalacion(codigoInstalacionInt)
@@ -300,11 +297,11 @@ def eliminarInstalacion():
 def consultarInstalaciones():
     nombreClub = input(
         'Ingrese el club del que desea consultar las instalaciones: ')
-    datos = verificarExistenciaClub(nombreClub)
+    datos = verificarExistenciaClub(nombreClub, clubes)
     while (datos[0] == False):
         nombreClub = input(
             'Nombre del club inexistente. Ingrese el club del que quiere consultar las instalaciones: ')
-        datos = verificarExistenciaClub(nombreClub)
+        datos = verificarExistenciaClub(nombreClub, clubes)
     for j in range(len(clubes[datos[1]].lista_instalaciones)):
         print("Nombre:", clubes[datos[1]].lista_instalaciones[j].nombre, ", Descripcion:", clubes[datos[1]
                                                                                                   ].lista_instalaciones[j].descripcion, ", Codigo:", clubes[datos[1]].lista_instalaciones[j].codigoInstalacion, '\n')
@@ -329,11 +326,11 @@ def registrarEmpleado():
         "Ingrese el salario actual del empleado: ", "Salario invalido. Ingrese el salario del empleado: ")
     nombreClub = input(
         "Ingrese el nombre del club en el que desea registrar el empleado: ")
-    datos = verificarExistenciaClub(nombreClub)
+    datos = verificarExistenciaClub(nombreClub, clubes)
     while (datos[0] == False):
         nombreClub = input(
             "Club inexistente. Ingrese el nombre del club en el que desea registrar el empleado: ")
-        datos = verificarExistenciaClub(nombreClub)
+        datos = verificarExistenciaClub(nombreClub, clubes)
     empleado = Empleado(nombre, apellido, sexo, edadInt,
                         dniInt, legajoInt, cargo, salarioInt)
     clubes[datos[1]].agregarEmpleado(empleado)
@@ -342,11 +339,11 @@ def registrarEmpleado():
 def eliminarEmpleado():
     nombreClub = input(
         "Ingrese el nombre del club en el que desea eliminar un empleado: ")
-    datos = verificarExistenciaClub(nombreClub)
+    datos = verificarExistenciaClub(nombreClub, clubes)
     while (datos[0] == False):
         nombreClub = input(
             "Club inexistente. Ingrese el nombre del club en el que desea eliminar un socio: ")
-        datos = verificarExistenciaClub(nombreClub)
+        datos = verificarExistenciaClub(nombreClub, clubes)
     legajo = verificarNumeroInput(
         "Ingrese el legajo del empleado que desea eliminar: ", "Numero de legajo invalido. Intente nuevamente")
     clubes[datos[1]].eliminarEmpleado(legajo)
@@ -355,11 +352,11 @@ def eliminarEmpleado():
 def consultarEmpleados():
     nombreClub = input(
         'Ingrese el club del que desea consultar los empleados: ')
-    datos = verificarExistenciaClub(nombreClub)
+    datos = verificarExistenciaClub(nombreClub, clubes)
     while (datos[0] == False):
         nombreClub = input(
             'Nombre del club inexistente. Ingrese el club del que quiere consultar los empleados: ')
-        datos = verificarExistenciaClub(nombreClub)
+        datos = verificarExistenciaClub(nombreClub, clubes)
     for j in range(len(clubes[datos[1]].lista_empleados)):
         print("Nombre:", clubes[datos[1]].lista_empleados[j].nombre, ", Apellido:", clubes[datos[1]
                                                                                            ].lista_empleados[j].apellido, ", Cargo:", clubes[datos[1]].lista_empleados[j].cargo, '\n')
@@ -395,11 +392,11 @@ def generarPago():
         "Ingrese el codigo de pago: ", "Codigo de pago invalido. Ingrese el codigo de pago: ")
     nombreClub = input(
         "Ingrese el nombre del club en el que desea generar el pago: ")
-    datos = verificarExistenciaClub(nombreClub)
+    datos = verificarExistenciaClub(nombreClub, clubes)
     while (datos[0] == False):
         nombreClub = input(
             "Club inexistente. Ingrese el nombre del club en el que desea generar el pago: ")
-        datos = verificarExistenciaClub(nombreClub)
+        datos = verificarExistenciaClub(nombreClub, clubes)
     nroSocioInt = verificarNumeroInput(
         "Ingrese el numero de socio: ", "Numero de socio invalido. Ingrese el numero de socio: ")
     pago = Pago(montoInt, fechadt, nroSocioInt, codigoPagoInt)
@@ -409,11 +406,11 @@ def generarPago():
 def eliminarPago():
     nombreClub = input(
         "Ingrese el nombre del club en el que desea eliminar un pago: ")
-    datos = verificarExistenciaClub(nombreClub)
+    datos = verificarExistenciaClub(nombreClub, clubes)
     while (datos[0] == False):
         nombreClub = input(
             "Club inexistente. Ingrese el nombre del club en el que desea eliminar un pago: ")
-        datos = verificarExistenciaClub(nombreClub)
+        datos = verificarExistenciaClub(nombreClub, clubes)
     nroPagoInt = verificarNumeroInput("Ingrese el numero de pago del pago que desea eliminar: ",
                                       "Numero de pago invalido. Ingrese el numero de pago del pago que desea eliminar: ")
     clubes[datos[1]].eliminarPago(nroPagoInt)
@@ -421,11 +418,11 @@ def eliminarPago():
 
 def consultarPagos():
     nombreClub = input('Ingrese el club del que desea consultar los pagos: ')
-    datos = verificarExistenciaClub(nombreClub)
+    datos = verificarExistenciaClub(nombreClub, clubes)
     while (datos[0] == False):
         nombreClub = input(
             'Nombre del club inexistente. Ingrese el club del que quiere consultar los pagos: ')
-        datos = verificarExistenciaClub(nombreClub)
+        datos = verificarExistenciaClub(nombreClub, clubes)
     for j in range(len(clubes[datos[1]].lista_pagos)):
         print("Fecha (año/mes/dia):", clubes[datos[1]].lista_pagos[j].fecha, ", Monto:", clubes[datos[1]
                                                                                                  ].lista_pagos[j].monto, ", Numero de socio: ", clubes[datos[1]].lista_pagos[j].nroSocio, '\n')
@@ -461,20 +458,21 @@ def crearReserva():
         "Ingrese el numero de reserva: ", "Numero de reserva invalido. Ingrese el numero de reserva: ")
     nombreClub = input(
         "Ingrese el nombre del club en el que desea realizar la reserva: ")
-    datos1 = verificarExistenciaClub(nombreClub)
+    datos1 = verificarExistenciaClub(nombreClub, clubes)
     while (datos1[0] == False):
         nombreClub = input(
             "Club inexistente. Ingrese el nombre del club en el que desea realizar la reserva: ")
-        datos1 = verificarExistenciaClub(nombreClub)
+        datos1 = verificarExistenciaClub(nombreClub, clubes)
     codigoInstalacionInt = verificarNumeroInput(
         "Ingrese el codigo de la instalacion que desea reservar: ", "Codigo invalido. Ingrese el codigo de la instalacion que desea reservar: ")
-    datos2 = verificarExistenciaInstalacion(codigoInstalacionInt, datos1[1])
+    datos2 = verificarExistenciaInstalacion(
+        codigoInstalacionInt, datos1[1], clubes)
     while (datos2[0] == False):
         print("Instalacion inexistente. Ingrese el codigo de la instalacion que desea reservar: ")
         codigoInstalacionInt = verificarNumeroInput(
             "Ingrese el codigo de la instalacion que desea reservar: ", "Codigo invalido. Ingrese el codigo de la instalacion que desea reservar: ")
         datos2 = verificarExistenciaInstalacion(
-            codigoInstalacionInt, datos1[1])
+            codigoInstalacionInt, datos1[1], clubes)
     reserva = Reserva(fechadt, horaReserva, nroReservaInt)
     clubes[datos1[1]].lista_instalaciones[datos2[1]].agregarReserva(reserva)
 
@@ -482,23 +480,25 @@ def crearReserva():
 def consultarReservas():
     nombreClub = input(
         'Ingrese el nombre del club del que desea consultar las reservas de una instalacion: ')
-    datos1 = verificarExistenciaClub(nombreClub)
+    datos1 = verificarExistenciaClub(nombreClub, clubes)
     while (datos1[0] == False):
         nombreClub = input(
             'Nombre del club inexistente. Ingrese el nombre del club del que desea consultar las reservas de una instalacion: ')
-        datos1 = verificarExistenciaClub(nombreClub)
+        datos1 = verificarExistenciaClub(nombreClub, clubes)
     codigoInstalacionInt = verificarNumeroInput("Ingrese el codigo de la instalacion que desea consultar las reservas: ",
                                                 "Codigo invalido. Ingrese el codigo de la instalacion que desea consultar las reservas: ")
-    datos2 = verificarExistenciaInstalacion(codigoInstalacionInt, datos1[1])
+    datos2 = verificarExistenciaInstalacion(
+        codigoInstalacionInt, datos1[1], clubes)
     while (datos2[0] == False):
         print("Instalacion inexistente. Ingrese el codigo de la instalacion que desea consultar las reservas: ")
         codigoInstalacionInt = verificarNumeroInput("Ingrese el codigo de la instalacion que desea consultar las reservas: ",
                                                     "Codigo invalido. Ingrese el codigo de la instalacion que desea consultar las reservas: ")
         datos2 = verificarExistenciaInstalacion(
-            codigoInstalacionInt, datos1[1])
+            codigoInstalacionInt, datos1[1], clubes)
     for r in range(len(clubes[datos1[1]].lista_instalaciones[datos2[1]].lista_reservas)):
         print("Fecha:", clubes[datos1[1]].lista_instalaciones[datos2[1]].lista_reservas[r].fechaReserva, ", Hora:", clubes[datos1[1]].lista_instalaciones[datos2[1]
                                                                                                                                                           ].lista_reservas[r].horaReserva, ", Numero de reserva:", clubes[datos1[1]].lista_instalaciones[datos2[1]].lista_reservas[r].nroReserva, '\n')
+
 
 def dominioMenosVeces():
     with open('invitados.txt', 'r') as f:

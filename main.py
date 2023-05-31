@@ -1,28 +1,26 @@
 import json
 from clases.Admin import Admin
-from verificaciones import *
-from auxiliares import *
-
-
-clubes = []
+import verificaciones as ver
+import auxiliares as aux
+import opcionesMenu as op
 
 
 def case3():
-    nombre = verificarInputSinNumeros(
+    nombre = ver.verificarInputSinNumeros(
         "Ingrese su nombre: ", "Ingreso invalido. Ingrese su nombre: ")
-    apellido = verificarInputSinNumeros(
+    apellido = ver.verificarInputSinNumeros(
         "Ingrese su apellido: ", "Ingreso invalido. Ingrese su apellido: ")
     stringCompleto = ''
     with open('invitados.txt', 'r') as f:
         data = f.read()
         data = data.split('\n')
-        data = splitearLista(data, ',')
+        data = aux.splitearLista(data, ',')
         coincide = True
         while (coincide == True):
             coincide = False
-            dni = verificarNumeroInput(
+            dni = ver.verificarNumeroInput(
                 "Ingrese su DNI: ", "Ingreso invalido: ")
-            email = verificarInputMail()
+            email = ver.verificarInputMail()
             for i in range(len(data)):
                 if data[i] != ['']:
                     if data[i][2] == str(dni) and data[i][3] != email:
@@ -53,11 +51,11 @@ def ingreso(archivo):
           "1. Registrarse", '\n',
           "2. Iniciar sesión", '\n',
           "3. Ingresar como invitado")
-    opcion = verificarNumeroInput(
+    opcion = ver.verificarNumeroInput(
         "Ingrese la opción: ", "Opcion invalida. Ingrese la opcion que desea elegir: ")
     while opcion not in range(1, 4):
         print("Opcion invalida")
-        opcion = verificarNumeroInput(
+        opcion = ver.verificarNumeroInput(
             "Ingrese la opción: ", "Opcion invalida. Ingrese la opcion que desea elegir: ")
 
     match opcion:
@@ -81,13 +79,13 @@ def ingreso(archivo):
                 else:
                     esta = False
             contrasenia = input("Ingrese contraseña: ")
-            nombre = verificarInputSinNumeros(
+            nombre = ver.verificarInputSinNumeros(
                 "Ingrese su nombre: ", "Ingreso invalido. Ingrese su nombre: ")
-            apellido = verificarInputSinNumeros(
+            apellido = ver.verificarInputSinNumeros(
                 "Ingrese su apellido: ", "Ingreso invalido. Ingrese su apellido: ")
-            dni = verificarNumeroInput(
+            dni = ver.verificarNumeroInput(
                 "Ingrese su DNI: ", "Ingreso invalido: ")
-            email = verificarInputMail()
+            email = ver.verificarInputMail()
             usu = Admin(nombre, apellido, dni, email,
                         usuario, contrasenia).__dict__
             jsonData.append(usu)
@@ -119,9 +117,7 @@ def ingreso(archivo):
 
 
 def menuPrincipal():
-    inicializarListaClubes()
-    for c in clubes:
-        c.inicializarClub()
+    op.inicializar()
     termina = False
     while (not termina):
         print("Menu principal", '\n',
@@ -149,61 +145,101 @@ def menuPrincipal():
               "22: Eliminar un usuario invitado por DNI o Mail", '\n',
               "23: Mostrar el dominio que menos veces fue ingresado como invitado"
               )
-        opcionElegida = verificarOpcionMenu("Ingrese el numero segun la opcion que quiera elegir o 0 para cerrar sesion y finalizar: ",
-                                            "Opcion invalida. Ingrese el numero segun la opcion que quiera elegir o 0 para cerrar sesion y finalizar: ")
+        opcionElegida = ver.verificarOpcionMenu("Ingrese el numero segun la opcion que quiera elegir o 0 para cerrar sesion y finalizar: ",
+                                                "Opcion invalida. Ingrese el numero segun la opcion que quiera elegir o 0 para cerrar sesion y finalizar: ")
         while opcionElegida not in range(24):
             print("Opcion invalida")
-            opcionElegida = verificarOpcionMenu("Ingrese el numero segun la opcion que quiera elegir o 0 para cerrar sesion y finalizar: ",
-                                                "Opcion invalida. Ingrese el numero segun la opcion que quiera elegir o 0 para cerrar sesion y finalizar: ")
+            opcionElegida = ver.verificarOpcionMenu("Ingrese el numero segun la opcion que quiera elegir o 0 para cerrar sesion y finalizar: ",
+                                                    "Opcion invalida. Ingrese el numero segun la opcion que quiera elegir o 0 para cerrar sesion y finalizar: ")
         match opcionElegida:
             case 0:
-                termina = finalizarPrograma()
+                termina = op.finalizarPrograma()
             case 1:
-                registrarClub()
+                op.registrarClub()
             case 2:
-                consultarInfoClub()
+                op.consultarInfoClub()
             case 3:
-                registrarSocio()
+                op.registrarSocio()
             case 4:
-                eliminarSocio()
+                op.eliminarSocio()
             case 5:
-                consultarSocios()
+                op.consultarSocios()
             case 6:
-                registrarInstalacion()
+                op.registrarInstalacion()
             case 7:
-                eliminarInstalacion()
+                op.eliminarInstalacion()
             case 8:
-                consultarInstalaciones()
+                op.consultarInstalaciones()
             case 9:
-                registrarEmpleado()
+                op.registrarEmpleado()
             case 10:
-                consultarEmpleados()
+                op.consultarEmpleados()
             case 11:
-                eliminarEmpleado()
+                op.eliminarEmpleado()
             case 12:
-                generarPago()
+                op.generarPago()
             case 13:
-                eliminarPago()
+                op.eliminarPago()
             case 14:
-                consultarPagos()
+                op.consultarPagos()
             case 15:
-                crearReserva()
+                op.crearReserva()
             case 16:
-                consultarReservas()
+                op.consultarReservas()
             case 17:
-                graficoEdades()
+                op.graficoEdades()
             case 18:
-                mostrarInvitados()
+                op.mostrarInvitados()
             case 19:
-                cambiarContrasenaUsuario()
+                op.cambiarContrasenaUsuario()
             case 20:
-                actualizarDatosInvitado()
+                op.actualizarDatosInvitado()
             case 21:
-                visualizarInvitadosMenosAcceso()
+                op.visualizarInvitadosMenosAcceso()
             case 22:
-                eliminarInvitado()
+                op.eliminarInvitado()
             case 23:
-                dominioMenosVeces()
+                op.dominioMenosVeces()
+
+
+def actualizarDatosInvitado():
+    with open('invitados.txt', 'r', encoding='utf-8') as f:
+        datos = f.read()
+        datos = datos.split('\n')
+        datos = aux.splitearLista(datos, ',')
+        encontrado = False
+        dni = ver.verificarNumeroInput('Ingresar DNI del usuario a actualizar los datos: ',
+                                       'Usuario invalido. Ingrese DNI del usuario para actualizar sus datos: ')
+        correo = ver.verificarInputConNumeros("Ingrese el correo del invitado al que le quiere actualizar los datos: ",
+                                              "Correo invalido. Ingrese el correo del invitado al que le quiere actualizar los datos: ")
+        for i in range(len(datos)):
+            if datos[i] != [''] and int(datos[i][2]) == dni and datos[i][3] == correo:
+                encontrado = True
+                indice = i
+        if not encontrado:
+            print("El invitado no esta registrado")
+            case3()
+        else:
+            print("Actualizacion de datos")
+            nombre = ver.verificarInputSinNumeros(
+                'Ingresar su nombre para actualizarlo: ', 'Nombre invalido. Ingrese su nombre para actualizarlo: ')
+            apellido = ver.verificarInputSinNumeros(
+                'Ingresar su apellido para actualizarlo: ', 'Apellido invalido. Ingrese su apellido para actualizarlo: ')
+            correo = ver.verificarInputConNumeros(
+                "Ingrese su correo para actualizarlo: ", "Correo invalido. Ingrese su correo para actualizarlo: ")
+            datos[indice][0] = nombre
+            datos[indice][1] = apellido
+            datos[indice][3] = correo
+            aEscribir = ''
+            for j in range(len(datos)):
+                if datos[j] != ['']:
+                    aEscribir += datos[j][0] + ',' + datos[j][1] + ',' + \
+                        datos[j][2] + ',' + datos[j][3] + \
+                        ',' + datos[j][4] + '\n'
+
+            with open('invitados.txt', 'w', encoding='utf-8') as g:
+                g.write(aEscribir)
+            print('Invitado actualizado exitosamente')
 
 
 ingreso("archivo.txt")

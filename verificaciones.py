@@ -1,6 +1,6 @@
-from main import clubes
 
-def verificarExistenciaInstalacion(codigo, indiceClub):
+
+def verificarExistenciaInstalacion(codigo, indiceClub, clubes):
     existe = False
     aux = -1
     for i in range(len(clubes[indiceClub].lista_instalaciones)):
@@ -80,7 +80,7 @@ def validarFecha(f):
     return esValido
 
 
-def verificarExistenciaClub(nombreClub):
+def verificarExistenciaClub(nombreClub, clubes):
     existe = False
     aux = -1
     for i in range(len(clubes)):

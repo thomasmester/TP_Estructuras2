@@ -5,7 +5,13 @@ from clases.Pago import Pago
 from clases.Reserva import Reserva
 import datetime
 from array import array
-from auxiliares import splitearLista
+
+
+def splitearLista(lista, var):
+    # recibe una lista de strings a splitear
+    for i in range(len(lista)):
+        lista[i] = lista[i].split(var)
+    return lista
 
 
 class Club:
@@ -22,13 +28,13 @@ class Club:
         self.lista_instalaciones = []
         self.lista_pagos = []
         self.lista_empleados = []
-        
-        self.edades = array("H",[])
-        self.clasificacion = array("H",[])
 
-    def agregaEdad(self,edad):
+        self.edades = array("H", [])
+        self.clasificacion = array("H", [])
+
+    def agregaEdad(self, edad):
         self.edades.append(edad)
-    
+
     def clasifica(self):
         menores = 0
         adultos = 0
@@ -41,9 +47,9 @@ class Club:
             if int(edad) >= 60:
                 mayores += 1
 
-        self.clasificacion.extend([menores,adultos,mayores])
+        self.clasificacion.extend([menores, adultos, mayores])
         return self.clasificacion
-    
+
     def guardarClub(self):
         socios_text = ""
         inst_text = ""
@@ -56,19 +62,21 @@ class Club:
             inst_text += (inst.nombre + "," + inst.descripcion + "," + str(inst.horaApertura) + "," + str(inst.horaCierre) + "," +
                           str(inst.codigoInstalacion))
             for res in inst.lista_reservas:
-                inst_text += ('-' + str(res.fechaReserva.year) + ',' + str(res.fechaReserva.month) + ',' + str(res.fechaReserva.day) + ',' + str(res.horaReserva) + ',' + str(res.nroReserva))
+                inst_text += ('-' + str(res.fechaReserva.year) + ',' + str(res.fechaReserva.month) + ',' + str(
+                    res.fechaReserva.day) + ',' + str(res.horaReserva) + ',' + str(res.nroReserva))
             inst_text += '|'
         for pago in self.lista_pagos:
-            pagos_text += (str(pago.monto) + "," + str(pago.fecha.year) + ',' + str(pago.fecha.month) + ',' + str(pago.fecha.day) + ','+ "," +
+            pagos_text += (str(pago.monto) + "," + str(pago.fecha.year) + ',' + str(pago.fecha.month) + ',' + str(pago.fecha.day) + ',' + "," +
                            str(pago.nroSocio) + "," + str(pago.codigoPago) + '|')
         for empleado in self.lista_empleados:
-            empleados_text += (empleado.nombre + ',' +empleado.apellido + ',' + empleado.sexo + ',' + str(empleado.edad) + ',' + str(empleado.DNI) + ',' + str(empleado.legajo) + ',' + empleado.cargo + ',' + str(empleado.salario) + '|')
+            empleados_text += (empleado.nombre + ',' + empleado.apellido + ',' + empleado.sexo + ',' + str(empleado.edad) +
+                               ',' + str(empleado.DNI) + ',' + str(empleado.legajo) + ',' + empleado.cargo + ',' + str(empleado.salario) + '|')
 
-        total_text = (socios_text[:-1] + '~'+
+        total_text = (socios_text[:-1] + '~' +
                       inst_text[:-1] + '~' + pagos_text[:-1] + '~' + empleados_text[:-1])
         with open("{}.txt".format(self.nombre), "w") as f:
             f.write(total_text)
-    
+
     def inicializarClub(self):
         with open("{}.txt".format(self.nombre), "r") as f:
             data = f.read()
@@ -90,28 +98,33 @@ class Club:
                 inst.append(splitearLista(i[j], ','))
             pagos = splitearLista(pagos, ',')
             empleados = splitearLista(empleados, ',')
-            
+
             if socios[0] != ['']:
                 for s in socios:
-                    self.lista_socios.append(Socio(s[0], s[1], s[2], int(s[3]), int(s[4]), int(s[5]), s[6]))
+                    self.lista_socios.append(
+                        Socio(s[0], s[1], s[2], int(s[3]), int(s[4]), int(s[5]), s[6]))
             if inst[0] != [['']]:
                 for i in range(len(inst)):
-                    self.lista_instalaciones.append(Instalacion(inst[i][0][0], inst[i][0][1], inst[i][0][2], inst[i][0][3], int(inst[i][0][4]) ))
+                    self.lista_instalaciones.append(Instalacion(
+                        inst[i][0][0], inst[i][0][1], inst[i][0][2], inst[i][0][3], int(inst[i][0][4])))
                     if len(inst[i]) > 1:
                         for r in range(len(inst[i])-1):
-                            rdate = datetime.date(int(inst[i][r+1][0]), int(inst[i][r+1][1]), int(inst[i][r+1][2]))
-                            self.lista_instalaciones[i].lista_reservas.append(Reserva(rdate, inst[i][r+1][1], inst[i][r+1][2]))
+                            rdate = datetime.date(
+                                int(inst[i][r+1][0]), int(inst[i][r+1][1]), int(inst[i][r+1][2]))
+                            self.lista_instalaciones[i].lista_reservas.append(
+                                Reserva(rdate, inst[i][r+1][1], inst[i][r+1][2]))
             if pagos[0] != ['']:
                 for p in pagos:
                     d = datetime.date(int(p[1]), int(p[2]), int(p[3]))
                     self.lista_pagos.append(Pago(p[0], d, p[4], p[5]))
             if empleados[0] != ['']:
                 for e in empleados:
-                    self.lista_empleados.append(Empleado(e[0], e[1], e[2], int(e[3]),int(e[4]),int(e[5]), e[6], e[7]))
+                    self.lista_empleados.append(
+                        Empleado(e[0], e[1], e[2], int(e[3]), int(e[4]), int(e[5]), e[6], e[7]))
 
     def presentacion(self):
         print("El club {} se fundo en {} y queda en {}".format(
-                self.nombre, self.anioFundacion, self.direccion))
+            self.nombre, self.anioFundacion, self.direccion))
 
     def agregarSocio(self, socio):
         esta = False
@@ -153,7 +166,8 @@ class Club:
             print("El pago {} ha sido agregado con éxito al club.".format(
                 pago.codigoPago))
         else:
-            print("Ya existe un pago con el codigo de pago {} o no hay un socio con el número {} ".format(pago.codigoPago, pago.nroSocio))
+            print("Ya existe un pago con el codigo de pago {} o no hay un socio con el número {} ".format(
+                pago.codigoPago, pago.nroSocio))
 
     def eliminarPago(self, codigoPago):
         esta = False
