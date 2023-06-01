@@ -131,16 +131,12 @@ def cambiarContrasenaUsuario():
 
 def mostrarInvitados():
     jsonData = jsonHandler('invitados.json')
-    aMostrar = ''
     if jsonData != None:
         for i in range(len(jsonData)):
             invitado=Invitado(jsonData[i]["nombre"], jsonData[i]["apellido"], jsonData[i]["DNI"], jsonData[i]["email"], jsonData[i]["cantVecesIngresa"])
             print(invitado)
-            aMostrar='Algo'
-    if aMostrar == '':
-        print('No hay usuarios invitados registrados.')
     else:
-        print(aMostrar)
+        print('No hay usuarios invitados registrados.')
 
 
 def clubGrafico():
