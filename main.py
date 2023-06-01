@@ -3,6 +3,7 @@ from clases.Admin import Admin
 import verificaciones as ver
 import auxiliares as aux
 import opcionesMenu as op
+from clases.Invitado import Invitado
 
 
 def case3():
@@ -10,40 +11,32 @@ def case3():
         "Ingrese su nombre: ", "Ingreso invalido. Ingrese su nombre: ")
     apellido = ver.verificarInputSinNumeros(
         "Ingrese su apellido: ", "Ingreso invalido. Ingrese su apellido: ")
-    stringCompleto = ''
-    with open('invitados.txt', 'r') as f:
-        data = f.read()
-        data = data.split('\n')
-        data = aux.splitearLista(data, ',')
-        coincide = True
-        while (coincide == True):
-            coincide = False
-            dni = ver.verificarNumeroInput(
-                "Ingrese su DNI: ", "Ingreso invalido: ")
-            email = ver.verificarInputMail()
-            for i in range(len(data)):
-                if data[i] != ['']:
-                    if data[i][2] == str(dni) and data[i][3] != email:
-                        coincide = True
-                    if data[i][2] != str(dni) and data[i][3] == email:
-                        coincide = True
-            if (coincide == True):
+    jsonData = aux.jsonHandler('invitados.json')
+    coincide = True
+    while (coincide == True):
+        coincide = False
+        dni = ver.verificarNumeroInput(
+            "Ingrese su DNI: ", "Ingreso invalido: ")
+        email = ver.verificarInputMail()
+        for i in range(len(jsonData)):
+            if jsonData[i]['DNI'] == str(dni) and jsonData[i]['email'] != email:
+                coincide = True
+            if jsonData[i]['DNI'] != str(dni) and jsonData[i]['email'] == email:
+                coincide = True
+        if (coincide == True):
                 print('Un usuario con el mismo dni no se puede registrar con diferentes mails y no puede registrarse más de un usuario con un mismo mail.')
         encontro = False
-        for i in range(len(data)):
-            if data[i] != [''] and int(data[i][2]) == dni:
-                data[i][4] = int(data[i][4]) + 1
+        for i in range(len(jsonData)):
+            if int(jsonData[i]['DNI']) == dni:
+                jsonData[i]['cantVecesIngresa'] = int(jsonData[i]['cantVecesIngresa']) + 1
                 encontro = True
         if not encontro:
-            datosInvitado = [nombre, apellido, dni, email, 1]
-            data.append(datosInvitado)
-    for i in range(len(data)):
-        if data[i] != ['']:
-            stringCompleto += data[i][0] + ',' + data[i][1] + ',' + \
-                str(data[i][2]) + ',' + data[i][3] + \
-                ',' + str(data[i][4]) + '\n'
-    with open('invitados.txt', 'w') as g:
-        g.write(stringCompleto)
+            datosInvitado = Invitado(nombre, apellido, dni, email, 1)
+            jsonData.append(datosInvitado.__dict__)
+        
+    with open('invitados.json', 'w') as g:
+        js = json.dumps(jsonData)
+        g.write(js)
 
 
 def ingreso(archivo):
@@ -61,12 +54,7 @@ def ingreso(archivo):
     match opcion:
         case 1:
             usuario = input("Ingrese usuario: ")
-            with open('admins.json', 'r') as f:
-                try:
-                    jsonData = json.load(f)
-                    f.close()
-                except json.decoder.JSONDecodeError:
-                    jsonData = []
+            jsonData = aux.jsonHandler('admins.json')
             esta = True
             while esta == True:
                 encontro = False
@@ -95,17 +83,12 @@ def ingreso(archivo):
             menuPrincipal()
         case 2:
             usuario = input("Ingrese usuario: ")
-            txt = open(archivo, "r", encoding="utf-8")
-            matrizUsuCon = []
-            for linea in txt:
-                uc = linea[:-1].split(",")
-                matrizUsuCon.append(uc)
-            txt.close()
+            jsonData = aux.jsonHandler('admins.json')
             sesionIniciada = False
             while (sesionIniciada == False):
                 contrasenia = input("Ingrese contraseña: ")
-                for i in range(len(matrizUsuCon)):
-                    if matrizUsuCon[i][0] == usuario and matrizUsuCon[i][1] == contrasenia:
+                for i in range(len(jsonData)):
+                    if jsonData[i]["usuario"] == usuario and jsonData[i]["contrasenia"] == contrasenia:
                         sesionIniciada = True
                 if sesionIniciada == False:
                     print(
@@ -242,4 +225,4 @@ def actualizarDatosInvitado():
             print('Invitado actualizado exitosamente')
 
 
-ingreso("archivo.txt")
+ingreso("admins.json")
