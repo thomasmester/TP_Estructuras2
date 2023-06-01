@@ -36,3 +36,6 @@ class Instalacion:
             else:
                 print('La reserva de las {} el día {} fue eliminada con éxito.'.format(
                     horaElim, fechaElim))
+                
+    def __str__(self):
+        return f'Información de la instalación:\n Nombre de la instalación: {self.nombre}, Descripción: {self.descripcion}, Código: {self.codigoInstalacion}'

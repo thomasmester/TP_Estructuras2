@@ -16,7 +16,7 @@ def verificarNumeroInput(texto1, texto2):
         varStr = input(texto1)
         try:
             varInt = int(varStr)
-            if varInt > 0:
+            if varInt > 0 and varInt!=None:
                 break
             else:
                 print("Ingreso invalido. Por favor, inténtelo de nuevo.")

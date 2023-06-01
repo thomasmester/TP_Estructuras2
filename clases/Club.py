@@ -31,6 +31,9 @@ class Club:
 
         self.edades = array("H", [])
         self.clasificacion = array("H", [])
+        
+    def __str__(self):
+        return f'Información del club: \n  Nombre del club: {self.nombre}, Año de funcación: {self.anioFundacion}, Dirección: {self.direccion}'
 
     def agregaEdad(self, edad):
         self.edades.append(edad)
@@ -121,10 +124,6 @@ class Club:
                 for e in empleados:
                     self.lista_empleados.append(
                         Empleado(e[0], e[1], e[2], int(e[3]), int(e[4]), int(e[5]), e[6], e[7]))
-
-    def presentacion(self):
-        print("El club {} se fundo en {} y queda en {}".format(
-            self.nombre, self.anioFundacion, self.direccion))
 
     def agregarSocio(self, socio):
         esta = False
@@ -235,3 +234,5 @@ class Club:
         else:
             print("No hay ningun empleado en el club cuyo legajo sea el {}".format(
                 legajo))
+            
+    
