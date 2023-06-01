@@ -1,4 +1,0 @@
-manu,1212,Manuel,Ejberowicz,45476601,manuejbe@gmail.com
-fede,1111,federico,Rodriguez,342424,jsndasnd@dasda.com
-tomi,3432,thomas,mester,41313421,sda@dadad.com
-pepito,123131,Pepito,eplidos,453,djonfosn@sdada.com

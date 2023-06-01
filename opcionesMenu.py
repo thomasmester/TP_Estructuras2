@@ -10,6 +10,7 @@ from clases.Reserva import *
 from clases.Empleado import *
 from clases.Pago import *
 from clases.Invitado import *
+
 clubes = []
 
 
@@ -129,14 +130,11 @@ def cambiarContrasenaUsuario():
 
 
 def mostrarInvitados():
-    with open('invitados.txt', 'r') as f:
-        data = f.read()
-        data = data.split('\n')
-        data = splitearLista(data, ',')
+    jsonData = jsonHandler('invitados.json')
     aMostrar = ''
-    if data != None:
-        for i in range(len(data)):
-            invitado=Invitado(data[i][0], data[i][1], data[i][2], data[i][3], data[i][4])
+    if jsonData != None:
+        for i in range(len(jsonData)):
+            invitado=Invitado(jsonData[i]["nombre"], jsonData[i]["apellido"], jsonData[i]["DNI"], jsonData[i]["email"], jsonData[i]["cantVecesIngresa"])
             print(invitado)
             aMostrar='Algo'
     if aMostrar == '':
@@ -174,10 +172,14 @@ def graficoEdades():
 
 def finalizarPrograma():
     print('Sesión cerrada, programa finalizado')
+    jsonList = []
     for c in clubes:
         c.guardarClub()
-    guardarListaClubes()
-    quit()
+        #c.guardarClub()
+        cDict = clubADicts(c)
+        with open('{}.json'.format(cDict['nombre']), 'w') as f:
+            js = json.dumps(cDict)
+            f.write(js)
 
 
 def registrarClub():

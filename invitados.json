@@ -1,9 +1,1 @@
-[
-    {
-        "nombre": "toato",
-        "apellido": "mes",
-        "DNI": 44555666,
-        "email": "tomi@mester.com",
-        "cantVecesIngresa": 1
-    }
-]
+[{"nombre": "toato", "apellido": "mes", "DNI": 44555666, "email": "tomi@mester.com", "cantVecesIngresa": 1}, {"nombre": "Francesco", "apellido": "Palmieri", "DNI": 42952245, "email": "francapo@gmail.com", "cantVecesIngresa": 1}]
