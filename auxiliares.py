@@ -9,13 +9,16 @@ def obtenerIndice(data, dato, j):
             indice = i
     return indice
 def jsonHandler(archivo):
-    with open(archivo, 'r') as f:
-        try:
-            jsonData = json.load(f)
-            f.close()
-        except json.decoder.JSONDecodeError:
-            jsonData = []
-        return jsonData
+    try:
+        with open(archivo, 'r') as f:
+            try:
+                jsonData = json.load(f)
+                f.close()
+            except json.decoder.JSONDecodeError:
+                jsonData = []
+    except FileNotFoundError:
+        print("El archivo no existe")
+    return jsonData
     
 def clubADicts(club):
     cDict = club.__dict__
