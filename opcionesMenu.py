@@ -14,7 +14,6 @@ from opcionesIngreso import *
 from clases.Cola import *
 clubes = []
 
-
 def guardarListaClubes():
     club_text = ''
     for c in clubes:
@@ -23,10 +22,8 @@ def guardarListaClubes():
     with open("clubes.txt", "w") as f:
         f.write(club_text)
 
-
 def getListaClubes():
     return clubes
-
 
 def inicializarListaClubes():
     with open('clubes.txt', 'r') as d:
@@ -36,7 +33,6 @@ def inicializarListaClubes():
         for i in range(len(ListaClubes)):
             if ListaClubes[i] != ['']:
                 clubes.append(Club(*ListaClubes[i]))
-
 
 def inicializar():
     inicializarListaClubes()
@@ -55,8 +51,7 @@ def inicializarClub(c):
     for i in range(len(data['lista_instalaciones'])):
         c.lista_instalaciones.append(Instalacion(*list(data['lista_instalaciones'][i].values())[0:5]))
         for j in range(len(data['lista_instalaciones'][i]['lista_reservas'])):
-            c.lista_instalaciones[i].lista_reservas.append(Reserva(**data['lista_instalaciones'][i]['lista_reservas'][j]))
-    
+            c.lista_instalaciones[i].lista_reservas.append(Reserva(**data['lista_instalaciones'][i]['lista_reservas'][j])) 
 
 def eliminarInvitado():
     jsonData = jsonHandler('invitados.json')
@@ -98,38 +93,28 @@ def visualizarInvitadosMenosAcceso():
     plt.bar(DNIs, cantidadIngresos, color='blue', width=0.5)
     plt.show()
 
-
 def cambiarContrasenaUsuario():
-    with open('archivo.txt', 'r', encoding='utf-8') as f:
-        datos = f.read()
-        datos = datos.split('\n')
-        datos = splitearLista(datos, ',')
-        encontrado = False
-        texto = ''
-        while not encontrado:
-            print(texto)
-            usuario = verificarInputConNumeros(
-                'Ingresar usuario: ', 'Usuario invalido. Ingrese otro usuario: ')
-            contrasenaActual = verificarInputConNumeros(
-                'Ingresar contrasena: ', 'Contrasena actual invalida. Ingrese otra contrasena: ')
-            for i in range(len(datos)):
-                if datos[i] != [''] and datos[i][0] == usuario and datos[i][1] == str(contrasenaActual):
-                    encontrado = True
-                    indice = i
-            texto = 'Usuario o contrasena invalidos. Ingresar los datos nuevamente.'
-        contrasenaNueva = verificarInputConNumeros(
-            'Ingresar contrasena nueva: ', 'Contrasena actual invalida. Ingrese otra contrasena: ')
-        datos[indice][1] = contrasenaNueva
-        aEscribir = ''
-        for j in range(len(datos)):
-            if datos[j] != ['']:
-                aEscribir += datos[j][0] + ',' + datos[j][1] + ',' + datos[j][2] + \
-                    ',' + datos[j][3] + ',' + datos[j][4] + \
-                    ',' + datos[j][5] + '\n'
-    with open('archivo.txt', 'w', encoding='utf-8') as g:
-        g.write(aEscribir)
+    jsonData = jsonHandler('admins.json')
+    encontrado = False
+    texto = ''
+    while not encontrado:
+        print(texto)
+        usuario = verificarInputConNumeros(
+            'Ingresar usuario: ', 'Usuario invalido. Ingrese otro usuario: ')
+        contrasenaActual = verificarInputConNumeros(
+            'Ingresar contrasena actual: ', 'Contrasena actual invalida. Ingrese otra contrasena: ')
+        for i in range(len(jsonData)):
+            if jsonData[i] != [''] and jsonData[i]["usuario"] == usuario and jsonData[i]["contrasenia"] == str(contrasenaActual):
+                encontrado = True
+                indice = i
+        texto = 'Usuario o contraseña invalidos. Ingresar los datos nuevamente.'
+    contrasenaNueva = verificarInputConNumeros(
+        'Ingresar contrasena nueva: ', 'Contrasena actual invalida. Ingrese otra contrasena: ')
+    jsonData[indice]["contrasenia"] = contrasenaNueva
+    with open("admins.json", 'w') as file:
+                js = json.dumps(jsonData)
+                file.write(js)
     print('Contrasena actualizada exitosamente')
-
 
 def mostrarInvitados():
     jsonData = jsonHandler('invitados.json')
@@ -139,7 +124,6 @@ def mostrarInvitados():
             print(invitado)
     else:
         print('No hay usuarios invitados registrados.')
-
 
 def clubGrafico():
     nombreClub = input(
@@ -154,7 +138,6 @@ def clubGrafico():
     clubes[datos[1]].clasifica()
     return clubes[datos[1]].clasificacion
 
-
 def graficoEdades():
     clasificacion = clubGrafico()
     rangos = ["1-18", "18-60", "+60"]
@@ -166,7 +149,6 @@ def graficoEdades():
     plt.ylabel("Cantidad")
     plt.bar(rangos, cantidad, color="blue", width=0.5)
     return plt.show()
-
 
 def finalizarPrograma():
     for c in clubes:
@@ -254,7 +236,6 @@ def registrarClub():
         clubes.append(club)
         print("Se ha registrado el club exitosamente")
 
-
 def consultarInfoClub():
     nombreClub = input(
         "Ingrese el nombre del club que quiere consultar informacion: ")
@@ -290,7 +271,6 @@ def registrarSocio():
                   dniInt, nroSocioInt, correoElectronico)
     clubes[datos[1]].agregarSocio(socio)
 
-
 def eliminarSocio():
     nombreClub = input(
         "Ingrese el nombre del club en el que desea eliminar un socio: ")
@@ -303,7 +283,6 @@ def eliminarSocio():
         "Ingrese el numero de socio del socio que desea eliminar: ", "Numero de socio invalido. Intente nuevamente")
     clubes[datos[1]].eliminarSocio(nroSocioInt)
 
-
 def consultarSocios():
     nombreClub = input("Ingrese el club del que quiere consultar los socios: ")
     datos = verificarExistenciaClub(nombreClub, clubes)
@@ -313,8 +292,7 @@ def consultarSocios():
         datos = verificarExistenciaClub(nombreClub, clubes)
     for j in range(len(clubes[datos[1]].lista_socios)):
         print(clubes[datos[1]].lista_socios[j])
-                                       
-                            
+                                                              
 def registrarInstalacion():
     nombre = verificarInputSinNumeros(
         "Ingrese el nombre de la instalacion: ", "Ingrese un nombre valido: ")
@@ -337,7 +315,6 @@ def registrarInstalacion():
         nombre, descripcion, horaApertura, horaCierre, codigoInstalacionInt)
     clubes[datos[1]].agregarInstalacion(instalacion)
 
-
 def eliminarInstalacion():
     nombreClub = input(
         "Ingrese el nombre del club en el que desea eliminar una instalacion: ")
@@ -350,7 +327,6 @@ def eliminarInstalacion():
         "Ingrese el codigo de la instalacion que desea eliminar: ", "Ingrese un codigo de instalacion valido: ")
     clubes[datos[1]].eliminarInstalacion(codigoInstalacionInt)
 
-
 def consultarInstalaciones():
     nombreClub = input(
         'Ingrese el club del que desea consultar las instalaciones: ')
@@ -361,7 +337,6 @@ def consultarInstalaciones():
         datos = verificarExistenciaClub(nombreClub, clubes)
     for j in range(len(clubes[datos[1]].lista_instalaciones)):
         print(clubes[datos[1]].lista_instalaciones[j])
-
 
 def registrarEmpleado():
     nombre = verificarInputSinNumeros(
@@ -391,7 +366,6 @@ def registrarEmpleado():
                         dniInt, legajoInt, cargo, salarioInt)
     clubes[datos[1]].agregarEmpleado(empleado)
 
-
 def eliminarEmpleado():
     nombreClub = input(
         "Ingrese el nombre del club en el que desea eliminar un empleado: ")
@@ -404,7 +378,6 @@ def eliminarEmpleado():
         "Ingrese el legajo del empleado que desea eliminar: ", "Numero de legajo invalido. Intente nuevamente")
     clubes[datos[1]].eliminarEmpleado(legajo)
 
-
 def consultarEmpleados():
     nombreClub = input(
         'Ingrese el club del que desea consultar los empleados: ')
@@ -415,7 +388,6 @@ def consultarEmpleados():
         datos = verificarExistenciaClub(nombreClub, clubes)
     for j in range(len(clubes[datos[1]].lista_empleados)):
         print(clubes[datos[1]].lista_empleados[j])
-
 
 def generarPago():
     montoInt = verificarNumeroInput(
@@ -457,7 +429,6 @@ def generarPago():
     pago = Pago(montoInt, fechadt, nroSocioInt, codigoPagoInt)
     clubes[datos[1]].agregarPago(pago)
 
-
 def eliminarPago():
     nombreClub = input(
         "Ingrese el nombre del club en el que desea eliminar un pago: ")
@@ -470,7 +441,6 @@ def eliminarPago():
                                       "Numero de pago invalido. Ingrese el numero de pago del pago que desea eliminar: ")
     clubes[datos[1]].eliminarPago(nroPagoInt)
 
-
 def consultarPagos():
     nombreClub = input('Ingrese el club del que desea consultar los pagos: ')
     datos = verificarExistenciaClub(nombreClub, clubes)
@@ -480,7 +450,6 @@ def consultarPagos():
         datos = verificarExistenciaClub(nombreClub, clubes)
     for j in range(len(clubes[datos[1]].lista_pagos)):
         print(clubes[datos[1]].lista_pagos[j])
-
 
 def crearReserva():
     fecha = verificarInputConNumeros("Ingrese la fecha con el formato DD-MM-YYYY: ",
@@ -530,7 +499,6 @@ def crearReserva():
     reserva = Reserva(fechadt, horaReserva, nroReservaInt)
     clubes[datos1[1]].lista_instalaciones[datos2[1]].agregarReserva(reserva)
 
-
 def consultarReservas():
     nombreClub = input(
         'Ingrese el nombre del club del que desea consultar las reservas de una instalacion: ')
@@ -552,18 +520,14 @@ def consultarReservas():
     for r in range(len(clubes[datos1[1]].lista_instalaciones[datos2[1]].lista_reservas)):
         print(clubes[datos1[1]].lista_instalaciones[datos2[1]].lista_reservas[r])
 
-
-def dominioMenosVeces():
-    with open('invitados.txt', 'r') as f:
-        data = f.read()
-    data = data.split('\n')
-    data = splitearLista(data, ',')
-    dataS = data[:len(data)-1]
+def mostrarElDominioMenosUsadoEnCorreosDeInvitados():
+    jsonData = jsonHandler('invitados.json')
     dominios = []
-    for i in range(len(dataS)):
-        indA = dataS[i][3].index('@')
-        dominios.append([dataS[i][3][indA+1:len(dataS[i][3])-4]])
-    for i in range(len(dominios)):
-        dominios[i].append(dominios.count(dominios[i]))
-    dominiosSorted = sorted(dominios, key=itemgetter(1))
-    print('El dominio menos utilizado es: ' + dominiosSorted[0][0])
+    for i in range(len(jsonData)):
+        dominios.append(jsonData[i]["email"].split("@")[1])
+    dominios = list(set(dominios))
+    dominios.sort()
+    dominios.sort(key=len)
+    dominioMenosUsado = dominios[0]
+    print("El dominio menos usado en los correos de los invitados es: " +
+          dominioMenosUsado)

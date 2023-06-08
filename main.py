@@ -150,7 +150,7 @@ def menuPrincipal():
             case 22:
                 op.eliminarInvitado()
             case 23:
-                op.dominioMenosVeces()
+                op.mostrarElDominioMenosUsadoEnCorreosDeInvitados()
             case 24:
                 op.flujo()
 
