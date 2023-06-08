@@ -8,6 +8,7 @@ def obtenerIndice(data, dato, j):
         if data[i][j] == str(dato):
             indice = i
     return indice
+
 def jsonHandler(archivo):
     try:
         with open(archivo, 'r') as f:

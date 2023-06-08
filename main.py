@@ -4,42 +4,10 @@ import verificaciones as ver
 import auxiliares as aux
 import opcionesMenu as op
 from clases.Invitado import Invitado
+from opcionesIngreso import *
 
 
-def case3():
-    nombre = ver.verificarInputSinNumeros(
-        "Ingrese su nombre: ", "Ingreso invalido. Ingrese su nombre: ")
-    apellido = ver.verificarInputSinNumeros(
-        "Ingrese su apellido: ", "Ingreso invalido. Ingrese su apellido: ")
-    jsonData = aux.jsonHandler('invitados.json')
-    coincide = True
-    while (coincide == True):
-        coincide = False
-        dni = ver.verificarNumeroInput(
-            "Ingrese su DNI: ", "Ingreso invalido: ")
-        email = ver.verificarInputMail()
-        for i in range(len(jsonData)):
-            if jsonData[i]['DNI'] == str(dni) and jsonData[i]['email'] != email:
-                coincide = True
-            if jsonData[i]['DNI'] != str(dni) and jsonData[i]['email'] == email:
-                coincide = True
-        if (coincide == True):
-                print('Un usuario con el mismo dni no se puede registrar con diferentes mails y no puede registrarse más de un usuario con un mismo mail.')
-        encontro = False
-        for i in range(len(jsonData)):
-            if int(jsonData[i]['DNI']) == dni:
-                jsonData[i]['cantVecesIngresa'] = int(jsonData[i]['cantVecesIngresa']) + 1
-                encontro = True
-        if not encontro:
-            datosInvitado = Invitado(nombre, apellido, dni, email, 1)
-            jsonData.append(datosInvitado.__dict__)
-        
-    with open('invitados.json', 'w') as g:
-        js = json.dumps(jsonData)
-        g.write(js)
-
-
-def ingreso(archivo):
+def ingreso():
     print("Bienvenido. Seleccione alguna de las siguientes opciones", '\n',
           "1. Registrarse", '\n',
           "2. Iniciar sesión", '\n',
@@ -130,7 +98,7 @@ def menuPrincipal():
               )
         opcionElegida = ver.verificarOpcionMenu("Ingrese el numero segun la opcion que quiera elegir o 0 para cerrar sesion y finalizar: ",
                                                 "Opcion invalida. Ingrese el numero segun la opcion que quiera elegir o 0 para cerrar sesion y finalizar: ")
-        while opcionElegida not in range(24):
+        while opcionElegida not in range(25):
             print("Opcion invalida")
             opcionElegida = ver.verificarOpcionMenu("Ingrese el numero segun la opcion que quiera elegir o 0 para cerrar sesion y finalizar: ",
                                                     "Opcion invalida. Ingrese el numero segun la opcion que quiera elegir o 0 para cerrar sesion y finalizar: ")
@@ -183,46 +151,7 @@ def menuPrincipal():
                 op.eliminarInvitado()
             case 23:
                 op.dominioMenosVeces()
+            case 24:
+                op.flujo()
 
-
-def actualizarDatosInvitado():
-    with open('invitados.txt', 'r', encoding='utf-8') as f:
-        datos = f.read()
-        datos = datos.split('\n')
-        datos = aux.splitearLista(datos, ',')
-        encontrado = False
-        dni = ver.verificarNumeroInput('Ingresar DNI del usuario a actualizar los datos: ',
-                                       'Usuario invalido. Ingrese DNI del usuario para actualizar sus datos: ')
-        correo = ver.verificarInputConNumeros("Ingrese el correo del invitado al que le quiere actualizar los datos: ",
-                                              "Correo invalido. Ingrese el correo del invitado al que le quiere actualizar los datos: ")
-        for i in range(len(datos)):
-            if datos[i] != [''] and int(datos[i][2]) == dni and datos[i][3] == correo:
-                encontrado = True
-                indice = i
-        if not encontrado:
-            print("El invitado no esta registrado")
-            case3()
-        else:
-            print("Actualizacion de datos")
-            nombre = ver.verificarInputSinNumeros(
-                'Ingresar su nombre para actualizarlo: ', 'Nombre invalido. Ingrese su nombre para actualizarlo: ')
-            apellido = ver.verificarInputSinNumeros(
-                'Ingresar su apellido para actualizarlo: ', 'Apellido invalido. Ingrese su apellido para actualizarlo: ')
-            correo = ver.verificarInputConNumeros(
-                "Ingrese su correo para actualizarlo: ", "Correo invalido. Ingrese su correo para actualizarlo: ")
-            datos[indice][0] = nombre
-            datos[indice][1] = apellido
-            datos[indice][3] = correo
-            aEscribir = ''
-            for j in range(len(datos)):
-                if datos[j] != ['']:
-                    aEscribir += datos[j][0] + ',' + datos[j][1] + ',' + \
-                        datos[j][2] + ',' + datos[j][3] + \
-                        ',' + datos[j][4] + '\n'
-
-            with open('invitados.txt', 'w', encoding='utf-8') as g:
-                g.write(aEscribir)
-            print('Invitado actualizado exitosamente')
-
-
-ingreso("admins.json")
+ingreso()
