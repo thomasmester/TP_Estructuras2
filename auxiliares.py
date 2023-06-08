@@ -9,6 +9,13 @@ def obtenerIndice(data, dato, j):
             indice = i
     return indice
 
+def obtenerIndiceJson(data, dato, j):
+    indice = -1
+    for i in range(len(data)):
+        if str(data[i]["{}".format(j)]) == dato:
+            indice = i
+    return indice
+
 def jsonHandler(archivo):
     try:
         with open(archivo, 'r') as f:

@@ -59,36 +59,26 @@ def inicializarClub(c):
     
 
 def eliminarInvitado():
-    with open('invitados.txt', 'r') as f:
-        data = f.read()
-    data = data.split('\n')
-    data = splitearLista(data, ',')
-    dataSpliteada = data[:len(data)-1]
+    jsonData = jsonHandler('invitados.json')
     indice = -1
     while (indice == -1):
         opcion = verificarOpcionMenu("Seleccione de que manera quiere eliminar al invitado" + '\n' + "1: Por DNI" + '\n'+"2: Por mail" +
                                      '\n', "Opcion invalida. Seleccione de que manera quiere eliminar al invitado" + '\n' + "1: Por DNI" + '\n'+"2: Por mail" + '\n')
         match opcion:
             case 1:
-                DNI = verificarNumeroInput(
+                dni = verificarNumeroInput(
                     'Ingresar DNI: ', 'Ingresar un DNI valido: ')
-                indice = obtenerIndice(dataSpliteada, DNI, 2)
+                indice = obtenerIndiceJson(jsonData, str(dni), "DNI")
             case 2:
                 Mail = verificarInputMail()
-                indice = obtenerIndice(dataSpliteada, Mail, 3)
+                indice = obtenerIndiceJson(jsonData, str(Mail), "email")
         if (indice == -1):
             print('Datos invalidos. Ingresar los datos nuevamente')
-    dataSpliteada.pop(indice)
-    aEscribir = ''
-    for j in range(len(dataSpliteada)):
-        if dataSpliteada[j] != ['']:
-            aEscribir += dataSpliteada[j][0] + ',' + dataSpliteada[j][1] + ',' + \
-                dataSpliteada[j][2] + ',' + dataSpliteada[j][3] + \
-                ',' + dataSpliteada[j][4] + '\n'
-    with open('invitados.txt', 'w', encoding='utf-8') as g:
-        g.write(aEscribir)
+    jsonData.pop(indice)
+    with open("invitados.json", 'w') as file:
+                js = json.dumps(jsonData)
+                file.write(js)
     print('El invitado ha sido eliminado correctamente. ')
-
 
 def visualizarInvitadosMenosAcceso():
     jsonData = jsonHandler('invitados.json')
