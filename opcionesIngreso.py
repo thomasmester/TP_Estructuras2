@@ -1,6 +1,6 @@
 import auxiliares as aux
 import verificaciones as ver
-import clases.Invitado as Invitado
+from clases.Invitado import *
 import json
 
 def case3():
@@ -30,7 +30,6 @@ def case3():
         if not encontro:
             datosInvitado = Invitado(nombre, apellido, dni, email, 1)
             jsonData.append(datosInvitado.__dict__)
-        
             with open('invitados.json', 'w') as g:
                 js = json.dumps(jsonData)
                 g.write(js)
