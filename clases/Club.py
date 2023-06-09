@@ -121,9 +121,8 @@ class Club:
                     self.lista_empleados.append(
                         Empleado(e[0], e[1], e[2], int(e[3]), int(e[4]), int(e[5]), e[6], e[7]))
 
-    def presentacion(self):
-        print("El club {} se fundo en {} y queda en {}".format(
-            self.nombre, self.anioFundacion, self.direccion))
+    def __str__(self):
+        return f"El club {self.nombre} se fundo en {self.anioFundacion} y queda en {self.direccion}"
 
     def agregarSocio(self, socio):
         esta = False

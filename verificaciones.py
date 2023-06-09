@@ -1,5 +1,3 @@
-
-
 def verificarExistenciaInstalacion(codigo, indiceClub, clubes):
     existe = False
     aux = -1

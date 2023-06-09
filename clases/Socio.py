@@ -7,5 +7,5 @@ class Socio(Persona):
         self.correoElectronico = correoElectronico
     
     def __str__(self):
-        return f'Datos del socio: Nombre:{self.nombre}, Apellido: {self.apellido}, Sexo:{self.sexo}, Edad: {self.edad}, DNI: {self.DNI}, nroSocio: {self.nroSocio}, Correo elecrónico: {self.correoElectronico}'
+        return f'Datos del socio: Nombre: {self.nombre}, Apellido: {self.apellido}, Sexo: {self.sexo}, Edad: {self.edad}, DNI: {self.DNI}, nroSocio: {self.nroSocio}, Correo elecrónico: {self.correoElectronico}'
     
