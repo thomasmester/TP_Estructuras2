@@ -8,6 +8,7 @@ def verificarExistenciaInstalacion(codigo, indiceClub, clubes):
     datos = [existe, aux]
     return datos
 
+
 def verificarNumeroInput(texto1, texto2):
     while True:
         varStr = input(texto1)
@@ -21,6 +22,7 @@ def verificarNumeroInput(texto1, texto2):
             print(texto2)
     return varInt
 
+
 def verificarOpcionMenu(texto1, texto2):
     while True:
         varStr = input(texto1)
@@ -31,17 +33,20 @@ def verificarOpcionMenu(texto1, texto2):
             print(texto2)
     return varInt
 
+
 def verificarInputSinNumeros(texto1, texto2):
     data = input(texto1)
     while (data == "" or tieneNumeros(data)):
         data = input(texto2)
     return data
 
+
 def verificarInputConNumeros(texto1, texto2):
     data = input(texto1)
     while (data == ""):
         data = input(texto2)
     return data
+
 
 def tieneNumeros(data):
     tiene = False
@@ -50,11 +55,13 @@ def tieneNumeros(data):
             tiene = True
     return tiene
 
+
 def verificarInputClub(texto1, texto2):
     data = input(texto1)
     while (data == "" or data == "clubes"):
         data = input(texto2)
     return data
+
 
 def verificarInputMail():
     data = input('Ingrese el correo electronico: ')
@@ -62,12 +69,14 @@ def verificarInputMail():
         data = input('Ingreso invalido. Ingrese el correo electronico: ')
     return data
 
+
 def validarFecha(f):
     esValido = False
     if len(f) == 10:
         esValido = True if (f[0] + f[1] + f[3] + f[4] + f[6] + f[7] +
                             f[8] + f[9]).isdigit() and (f[2] + f[5]) == '--' else False
     return esValido
+
 
 def verificarExistenciaClub(nombreClub, clubes):
     existe = False
