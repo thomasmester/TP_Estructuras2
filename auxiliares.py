@@ -44,7 +44,6 @@ def clubADicts(club):
             cDict['lista_instalaciones'][i]['lista_reservas'][j]['fechaReserva'] = str(cDict['lista_instalaciones'][i]['lista_reservas'][j]['fechaReserva'])
     return cDict
 
-    return cDict
 def splitearLista(lista, var):
     # recibe una lista de strings a splitear
     for i in range(len(lista)):
