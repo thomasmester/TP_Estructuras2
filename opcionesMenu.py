@@ -13,6 +13,7 @@ from clases.Invitado import *
 from opcionesIngreso import *
 clubes = []
 
+
 def guardarListaClubes():
     club_text = ''
     for c in clubes:
@@ -21,8 +22,10 @@ def guardarListaClubes():
     with open("clubes.txt", "w") as f:
         f.write(club_text)
 
+
 def getListaClubes():
     return clubes
+
 
 def inicializarListaClubes():
     with open('clubes.txt', 'r') as d:
@@ -33,10 +36,12 @@ def inicializarListaClubes():
             if ListaClubes[i] != ['']:
                 clubes.append(Club(*ListaClubes[i]))
 
+
 def inicializar():
     inicializarListaClubes()
     for c in clubes:
         inicializarClub(c)
+
 
 def inicializarClub(c):
     data = jsonHandler(c.nombre + '.json')
@@ -48,9 +53,12 @@ def inicializarClub(c):
     for i in range(len(data['lista_empleados'])):
         c.lista_empleados.append(Empleado(**data['lista_empleados'][i]))
     for i in range(len(data['lista_instalaciones'])):
-        c.lista_instalaciones.append(Instalacion(*list(data['lista_instalaciones'][i].values())[0:5]))
+        c.lista_instalaciones.append(Instalacion(
+            *list(data['lista_instalaciones'][i].values())[0:5]))
         for j in range(len(data['lista_instalaciones'][i]['lista_reservas'])):
-            c.lista_instalaciones[i].lista_reservas.append(Reserva(**data['lista_instalaciones'][i]['lista_reservas'][j])) 
+            c.lista_instalaciones[i].lista_reservas.append(
+                Reserva(**data['lista_instalaciones'][i]['lista_reservas'][j]))
+
 
 def eliminarInvitado():
     jsonData = jsonHandler('invitados.json')
@@ -70,9 +78,10 @@ def eliminarInvitado():
             print('Datos invalidos. Ingresar los datos nuevamente')
     jsonData.pop(indice)
     with open("invitados.json", 'w') as file:
-                js = json.dumps(jsonData)
-                file.write(js)
+        js = json.dumps(jsonData)
+        file.write(js)
     print('El invitado ha sido eliminado correctamente. ')
+
 
 def visualizarInvitadosMenosAcceso():
     jsonData = jsonHandler('invitados.json')
@@ -82,7 +91,8 @@ def visualizarInvitadosMenosAcceso():
     for i in range(len(jsonDataOrdenado)):
         if i < 5:
             DNIs.append(str(jsonDataOrdenado[i]["DNI"]))
-            cantidadIngresos.append(int(jsonDataOrdenado[i]["cantVecesIngresa"]))
+            cantidadIngresos.append(
+                int(jsonDataOrdenado[i]["cantVecesIngresa"]))
     x_vals = list(range(len(DNIs)))
     plt.title(label='Cant. ingresos por usuario con menor acceso',
               fontsize=20, color='red')
@@ -91,6 +101,7 @@ def visualizarInvitadosMenosAcceso():
     plt.ylabel('Cantidad de ingresos')
     plt.bar(DNIs, cantidadIngresos, color='blue', width=0.5)
     plt.show()
+
 
 def cambiarContrasenaUsuario():
     jsonData = jsonHandler('admins.json')
@@ -111,18 +122,21 @@ def cambiarContrasenaUsuario():
         'Ingresar contrasena nueva: ', 'Contrasena actual invalida. Ingrese otra contrasena: ')
     jsonData[indice]["contrasenia"] = contrasenaNueva
     with open("admins.json", 'w') as file:
-                js = json.dumps(jsonData)
-                file.write(js)
+        js = json.dumps(jsonData)
+        file.write(js)
     print('Contrasena actualizada exitosamente')
+
 
 def mostrarInvitados():
     jsonData = jsonHandler('invitados.json')
     if jsonData != None:
         for i in range(len(jsonData)):
-            invitado=Invitado(jsonData[i]["nombre"], jsonData[i]["apellido"], jsonData[i]["DNI"], jsonData[i]["email"], jsonData[i]["cantVecesIngresa"])
+            invitado = Invitado(jsonData[i]["nombre"], jsonData[i]["apellido"], jsonData[i]
+                                ["DNI"], jsonData[i]["email"], jsonData[i]["cantVecesIngresa"])
             print(invitado)
     else:
         print('No hay usuarios invitados registrados.')
+
 
 def clubGrafico():
     nombreClub = input(
@@ -137,6 +151,7 @@ def clubGrafico():
     clubes[datos[1]].clasifica()
     return clubes[datos[1]].clasificacion
 
+
 def graficoEdades():
     clasificacion = clubGrafico()
     rangos = ["1-18", "18-60", "+60"]
@@ -149,6 +164,7 @@ def graficoEdades():
     plt.bar(rangos, cantidad, color="blue", width=0.5)
     return plt.show()
 
+
 def finalizarPrograma():
     for c in clubes:
         cDict = clubADicts(c)
@@ -157,38 +173,41 @@ def finalizarPrograma():
             cDict.pop('clasificacion')
             js = json.dumps(cDict)
             f.write(js)
+        guardarListaClubes()
     print('Sesión cerrada, programa finalizado')
     quit()
 
+
 def actualizarDatosInvitado():
-        jsonData = jsonHandler('invitados.json')
-        encontrado = False
-        dni = verificarNumeroInput('Ingresar DNI del usuario a actualizar los datos: ',
-                                       'Usuario invalido. Ingrese DNI del usuario para actualizar sus datos: ')
-        correo = verificarInputConNumeros("Ingrese el correo del invitado al que le quiere actualizar los datos: ",
-                                              "Correo invalido. Ingrese el correo del invitado al que le quiere actualizar los datos: ")
-        for i in range(len(jsonData)):
-            if jsonData[i] != [''] and int(jsonData[i]["DNI"]) == dni and jsonData[i]["email"] == correo:
-                encontrado = True
-                indice = i
-        if not encontrado:
-            print("El invitado no esta registrado. A continuacion puede registrarlo: ")
-            case3()
-        else:
-            print("Actualizacion de datos")
-            nombre = verificarInputSinNumeros(
-                'Ingresar su nombre para actualizarlo: ', 'Nombre invalido. Ingrese su nombre para actualizarlo: ')
-            apellido = verificarInputSinNumeros(
-                'Ingresar su apellido para actualizarlo: ', 'Apellido invalido. Ingrese su apellido para actualizarlo: ')
-            correo = verificarInputConNumeros(
-                "Ingrese su correo para actualizarlo: ", "Correo invalido. Ingrese su correo para actualizarlo: ")
-            jsonData[indice]["nombre"] = nombre
-            jsonData[indice]["apellido"] = apellido
-            jsonData[indice]["email"] = correo
-            with open("invitados.json", 'w') as file:
-                js = json.dumps(jsonData)
-                file.write(js)
-            print('Invitado actualizado exitosamente')
+    jsonData = jsonHandler('invitados.json')
+    encontrado = False
+    dni = verificarNumeroInput('Ingresar DNI del usuario a actualizar los datos: ',
+                               'Usuario invalido. Ingrese DNI del usuario para actualizar sus datos: ')
+    correo = verificarInputConNumeros("Ingrese el correo del invitado al que le quiere actualizar los datos: ",
+                                      "Correo invalido. Ingrese el correo del invitado al que le quiere actualizar los datos: ")
+    for i in range(len(jsonData)):
+        if jsonData[i] != [''] and int(jsonData[i]["DNI"]) == dni and jsonData[i]["email"] == correo:
+            encontrado = True
+            indice = i
+    if not encontrado:
+        print("El invitado no esta registrado. A continuacion puede registrarlo: ")
+        case3()
+    else:
+        print("Actualizacion de datos")
+        nombre = verificarInputSinNumeros(
+            'Ingresar su nombre para actualizarlo: ', 'Nombre invalido. Ingrese su nombre para actualizarlo: ')
+        apellido = verificarInputSinNumeros(
+            'Ingresar su apellido para actualizarlo: ', 'Apellido invalido. Ingrese su apellido para actualizarlo: ')
+        correo = verificarInputConNumeros(
+            "Ingrese su correo para actualizarlo: ", "Correo invalido. Ingrese su correo para actualizarlo: ")
+        jsonData[indice]["nombre"] = nombre
+        jsonData[indice]["apellido"] = apellido
+        jsonData[indice]["email"] = correo
+        with open("invitados.json", 'w') as file:
+            js = json.dumps(jsonData)
+            file.write(js)
+        print('Invitado actualizado exitosamente')
+
 
 def registrarClub():
     agrega = True
@@ -207,6 +226,7 @@ def registrarClub():
         clubes.append(club)
         print("Se ha registrado el club exitosamente")
 
+
 def consultarInfoClub():
     nombreClub = input(
         "Ingrese el nombre del club que quiere consultar informacion: ")
@@ -215,7 +235,8 @@ def consultarInfoClub():
         nombreClub = input(
             "Ese club no existe. Ingrese el nombre del club que quiere consultar informacion: ")
         datos = verificarExistenciaClub(nombreClub, clubes)
-    print(clubes[datos[1]]) 
+    print(clubes[datos[1]])
+
 
 def registrarSocio():
     nombre = verificarInputSinNumeros(
@@ -242,6 +263,7 @@ def registrarSocio():
                   dniInt, nroSocioInt, correoElectronico)
     clubes[datos[1]].agregarSocio(socio)
 
+
 def eliminarSocio():
     nombreClub = input(
         "Ingrese el nombre del club en el que desea eliminar un socio: ")
@@ -254,6 +276,7 @@ def eliminarSocio():
         "Ingrese el numero de socio del socio que desea eliminar: ", "Numero de socio invalido. Intente nuevamente")
     clubes[datos[1]].eliminarSocio(nroSocioInt)
 
+
 def consultarSocios():
     nombreClub = input("Ingrese el club del que quiere consultar los socios: ")
     datos = verificarExistenciaClub(nombreClub, clubes)
@@ -262,10 +285,11 @@ def consultarSocios():
             "Nombre de club inexistente. Ingrese el club del que quiere consultar los socios: ")
         datos = verificarExistenciaClub(nombreClub, clubes)
     if len(clubes[datos[1]].lista_socios) == 0:
-        print ("No hay socios registrados en este club")
+        print("No hay socios registrados en este club")
         for j in range(len(clubes[datos[1]].lista_socios)):
             print(clubes[datos[1]].lista_socios[j])
-                                                              
+
+
 def registrarInstalacion():
     nombre = verificarInputSinNumeros(
         "Ingrese el nombre de la instalacion: ", "Ingrese un nombre valido: ")
@@ -288,6 +312,7 @@ def registrarInstalacion():
         nombre, descripcion, horaApertura, horaCierre, codigoInstalacionInt)
     clubes[datos[1]].agregarInstalacion(instalacion)
 
+
 def eliminarInstalacion():
     nombreClub = input(
         "Ingrese el nombre del club en el que desea eliminar una instalacion: ")
@@ -300,6 +325,7 @@ def eliminarInstalacion():
         "Ingrese el codigo de la instalacion que desea eliminar: ", "Ingrese un codigo de instalacion valido: ")
     clubes[datos[1]].eliminarInstalacion(codigoInstalacionInt)
 
+
 def consultarInstalaciones():
     nombreClub = input(
         'Ingrese el club del que desea consultar las instalaciones: ')
@@ -309,9 +335,10 @@ def consultarInstalaciones():
             'Nombre del club inexistente. Ingrese el club del que quiere consultar las instalaciones: ')
         datos = verificarExistenciaClub(nombreClub, clubes)
     if len(clubes[datos[1]].lista_instalaciones) == 0:
-        print ("No hay instalaciones registradas en este club")
+        print("No hay instalaciones registradas en este club")
         for j in range(len(clubes[datos[1]].lista_instalaciones)):
             print(clubes[datos[1]].lista_instalaciones[j])
+
 
 def registrarEmpleado():
     nombre = verificarInputSinNumeros(
@@ -341,6 +368,7 @@ def registrarEmpleado():
                         dniInt, legajoInt, cargo, salarioInt)
     clubes[datos[1]].agregarEmpleado(empleado)
 
+
 def eliminarEmpleado():
     nombreClub = input(
         "Ingrese el nombre del club en el que desea eliminar un empleado: ")
@@ -353,6 +381,7 @@ def eliminarEmpleado():
         "Ingrese el legajo del empleado que desea eliminar: ", "Numero de legajo invalido. Intente nuevamente")
     clubes[datos[1]].eliminarEmpleado(legajo)
 
+
 def consultarEmpleados():
     nombreClub = input(
         'Ingrese el club del que desea consultar los empleados: ')
@@ -362,9 +391,10 @@ def consultarEmpleados():
             'Nombre del club inexistente. Ingrese el club del que quiere consultar los empleados: ')
         datos = verificarExistenciaClub(nombreClub, clubes)
     if len(clubes[datos[1]].lista_empleados) == 0:
-        print ("No hay empleados registrados en este club")
+        print("No hay empleados registrados en este club")
         for j in range(len(clubes[datos[1]].lista_empleados)):
             print(clubes[datos[1]].lista_empleados[j])
+
 
 def generarPago():
     montoInt = verificarNumeroInput(
@@ -406,6 +436,7 @@ def generarPago():
     pago = Pago(montoInt, fechadt, nroSocioInt, codigoPagoInt)
     clubes[datos[1]].agregarPago(pago)
 
+
 def eliminarPago():
     nombreClub = input(
         "Ingrese el nombre del club en el que desea eliminar un pago: ")
@@ -418,6 +449,7 @@ def eliminarPago():
                                       "Numero de pago invalido. Ingrese el numero de pago del pago que desea eliminar: ")
     clubes[datos[1]].eliminarPago(nroPagoInt)
 
+
 def consultarPagos():
     nombreClub = input('Ingrese el club del que desea consultar los pagos: ')
     datos = verificarExistenciaClub(nombreClub, clubes)
@@ -426,9 +458,10 @@ def consultarPagos():
             'Nombre del club inexistente. Ingrese el club del que quiere consultar los pagos: ')
         datos = verificarExistenciaClub(nombreClub, clubes)
     if len(clubes[datos[1]].lista_pagos) == 0:
-        print ("No hay pagos registrados en este club")
+        print("No hay pagos registrados en este club")
         for j in range(len(clubes[datos[1]].lista_pagos)):
             print(clubes[datos[1]].lista_pagos[j])
+
 
 def crearReserva():
     fecha = verificarInputConNumeros("Ingrese la fecha con el formato DD-MM-YYYY: ",
@@ -478,6 +511,7 @@ def crearReserva():
     reserva = Reserva(fechadt, horaReserva, nroReservaInt)
     clubes[datos1[1]].lista_instalaciones[datos2[1]].agregarReserva(reserva)
 
+
 def consultarReservas():
     nombreClub = input(
         'Ingrese el nombre del club del que desea consultar las reservas de una instalacion: ')
@@ -497,9 +531,11 @@ def consultarReservas():
         datos2 = verificarExistenciaInstalacion(
             codigoInstalacionInt, datos1[1], clubes)
     if len(clubes[datos1[1]].lista_instalaciones[datos2[1]].lista_reservas) == 0:
-        print ("No hay reservas registradas en esta instalacion")
+        print("No hay reservas registradas en esta instalacion")
         for r in range(len(clubes[datos1[1]].lista_instalaciones[datos2[1]].lista_reservas)):
-            print(clubes[datos1[1]].lista_instalaciones[datos2[1]].lista_reservas[r])
+            print(
+                clubes[datos1[1]].lista_instalaciones[datos2[1]].lista_reservas[r])
+
 
 def mostrarElDominioMenosUsadoEnCorreosDeInvitados():
     jsonData = jsonHandler('invitados.json')
