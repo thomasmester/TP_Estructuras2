@@ -286,8 +286,8 @@ def consultarSocios():
         datos = verificarExistenciaClub(nombreClub, clubes)
     if len(clubes[datos[1]].lista_socios) == 0:
         print("No hay socios registrados en este club")
-        for j in range(len(clubes[datos[1]].lista_socios)):
-            print(clubes[datos[1]].lista_socios[j])
+    for j in range(len(clubes[datos[1]].lista_socios)):
+        print(clubes[datos[1]].lista_socios[j])
 
 
 def registrarInstalacion():
@@ -336,8 +336,8 @@ def consultarInstalaciones():
         datos = verificarExistenciaClub(nombreClub, clubes)
     if len(clubes[datos[1]].lista_instalaciones) == 0:
         print("No hay instalaciones registradas en este club")
-        for j in range(len(clubes[datos[1]].lista_instalaciones)):
-            print(clubes[datos[1]].lista_instalaciones[j])
+    for j in range(len(clubes[datos[1]].lista_instalaciones)):
+        print(clubes[datos[1]].lista_instalaciones[j])
 
 
 def registrarEmpleado():
@@ -392,8 +392,8 @@ def consultarEmpleados():
         datos = verificarExistenciaClub(nombreClub, clubes)
     if len(clubes[datos[1]].lista_empleados) == 0:
         print("No hay empleados registrados en este club")
-        for j in range(len(clubes[datos[1]].lista_empleados)):
-            print(clubes[datos[1]].lista_empleados[j])
+    for j in range(len(clubes[datos[1]].lista_empleados)):
+        print(clubes[datos[1]].lista_empleados[j])
 
 
 def generarPago():
@@ -459,8 +459,8 @@ def consultarPagos():
         datos = verificarExistenciaClub(nombreClub, clubes)
     if len(clubes[datos[1]].lista_pagos) == 0:
         print("No hay pagos registrados en este club")
-        for j in range(len(clubes[datos[1]].lista_pagos)):
-            print(clubes[datos[1]].lista_pagos[j])
+    for j in range(len(clubes[datos[1]].lista_pagos)):
+        print(clubes[datos[1]].lista_pagos[j])
 
 
 def crearReserva():
@@ -532,9 +532,8 @@ def consultarReservas():
             codigoInstalacionInt, datos1[1], clubes)
     if len(clubes[datos1[1]].lista_instalaciones[datos2[1]].lista_reservas) == 0:
         print("No hay reservas registradas en esta instalacion")
-        for r in range(len(clubes[datos1[1]].lista_instalaciones[datos2[1]].lista_reservas)):
-            print(
-                clubes[datos1[1]].lista_instalaciones[datos2[1]].lista_reservas[r])
+    for r in range(len(clubes[datos1[1]].lista_instalaciones[datos2[1]].lista_reservas)):
+        print(clubes[datos1[1]].lista_instalaciones[datos2[1]].lista_reservas[r])
 
 
 def mostrarElDominioMenosUsadoEnCorreosDeInvitados():
