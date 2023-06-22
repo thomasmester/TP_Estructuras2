@@ -6,7 +6,6 @@ from clases.Reserva import Reserva
 import datetime
 from array import array
 
-
 def splitearLista(lista, var):
     # recibe una lista de strings a splitear
     for i in range(len(lista)):

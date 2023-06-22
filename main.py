@@ -90,7 +90,7 @@ def menuPrincipal():
               "16: Consultar reservas en una instalacion de un club", '\n',
               "17: Ver un grafico de los socios divididos por rango etario de un club", '\n',
               "18: Mostrar usuarios invitados", '\n',
-              "19: Cambiar contrasena de usuario", '\n',
+              "19: Cambiar contraseña de usuario", '\n',
               "20: Actualizar datos de un usuario invitado", '\n',
               "21: Visualizar en una gráfica tipo barras los dni de los 5 usuarios invitados que menos acceso hayan tenido a la plataforma", '\n',
               "22: Eliminar un usuario invitado por DNI o Mail", '\n',
@@ -98,7 +98,7 @@ def menuPrincipal():
               )
         opcionElegida = ver.verificarOpcionMenu("Ingrese el numero segun la opcion que quiera elegir o 0 para cerrar sesion y finalizar: ",
                                                 "Opcion invalida. Ingrese el numero segun la opcion que quiera elegir o 0 para cerrar sesion y finalizar: ")
-        while opcionElegida not in range(25):
+        while opcionElegida not in range(24):
             print("Opcion invalida")
             opcionElegida = ver.verificarOpcionMenu("Ingrese el numero segun la opcion que quiera elegir o 0 para cerrar sesion y finalizar: ",
                                                     "Opcion invalida. Ingrese el numero segun la opcion que quiera elegir o 0 para cerrar sesion y finalizar: ")
@@ -151,7 +151,5 @@ def menuPrincipal():
                 op.eliminarInvitado()
             case 23:
                 op.mostrarElDominioMenosUsadoEnCorreosDeInvitados()
-            case 24:
-                op.flujo()
 
 ingreso()

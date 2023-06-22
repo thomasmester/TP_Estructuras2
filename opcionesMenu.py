@@ -11,7 +11,6 @@ from clases.Empleado import *
 from clases.Pago import *
 from clases.Invitado import *
 from opcionesIngreso import *
-from clases.Cola import *
 clubes = []
 
 def guardarListaClubes():
@@ -191,34 +190,6 @@ def actualizarDatosInvitado():
                 file.write(js)
             print('Invitado actualizado exitosamente')
 
-def flujo():
-    nombreClub = input(
-        "Ingrese el nombre del club en el que desea eliminar un pago: ")
-    datos = verificarExistenciaClub(nombreClub, clubes)
-    while (datos[0] == False):
-        nombreClub = input(
-            "Club inexistente. Ingrese el nombre del club en el que desea eliminar un pago: ")
-        datos = verificarExistenciaClub(nombreClub, clubes)
-    cola = ColaSocios()
-    datos[1].cola = ColaSocios
-    d = input("Ingrese V si hay disponibilidad o F si no la hay: ")
-    while d != "V" and d!= "F":
-        d = input("Ingrese V si hay disponibilidad o F si no la hay: ")
-    if d == "V":
-        clubes[datos[1]].disponibilidad = True
-    if d == "F":
-        clubes[datos[1]].disponibilidad = False
-    while clubes[datos[1]].disponibilidad == True:
-        for i in range(len(ColaSocios)):
-            datos[1].lista_socios.append(cola.desencolar())
-            d = input("Ingrese V si hay disponibilidad o F si no la hay: ")
-            while d != "V" and d!= "F":
-                d = input("Ingrese V si hay disponibilidad o F si no la hay: ")
-            if d == "V":
-                clubes[datos[1]].disponibilidad = True
-            if d == "F":
-                clubes[datos[1]].disponibilidad = False
-
 def registrarClub():
     agrega = True
     nombre = verificarInputClub(
@@ -290,8 +261,10 @@ def consultarSocios():
         nombreClub = input(
             "Nombre de club inexistente. Ingrese el club del que quiere consultar los socios: ")
         datos = verificarExistenciaClub(nombreClub, clubes)
-    for j in range(len(clubes[datos[1]].lista_socios)):
-        print(clubes[datos[1]].lista_socios[j])
+    if len(clubes[datos[1]].lista_socios) == 0:
+        print ("No hay socios registrados en este club")
+        for j in range(len(clubes[datos[1]].lista_socios)):
+            print(clubes[datos[1]].lista_socios[j])
                                                               
 def registrarInstalacion():
     nombre = verificarInputSinNumeros(
@@ -335,8 +308,10 @@ def consultarInstalaciones():
         nombreClub = input(
             'Nombre del club inexistente. Ingrese el club del que quiere consultar las instalaciones: ')
         datos = verificarExistenciaClub(nombreClub, clubes)
-    for j in range(len(clubes[datos[1]].lista_instalaciones)):
-        print(clubes[datos[1]].lista_instalaciones[j])
+    if len(clubes[datos[1]].lista_instalaciones) == 0:
+        print ("No hay instalaciones registradas en este club")
+        for j in range(len(clubes[datos[1]].lista_instalaciones)):
+            print(clubes[datos[1]].lista_instalaciones[j])
 
 def registrarEmpleado():
     nombre = verificarInputSinNumeros(
@@ -386,8 +361,10 @@ def consultarEmpleados():
         nombreClub = input(
             'Nombre del club inexistente. Ingrese el club del que quiere consultar los empleados: ')
         datos = verificarExistenciaClub(nombreClub, clubes)
-    for j in range(len(clubes[datos[1]].lista_empleados)):
-        print(clubes[datos[1]].lista_empleados[j])
+    if len(clubes[datos[1]].lista_empleados) == 0:
+        print ("No hay empleados registrados en este club")
+        for j in range(len(clubes[datos[1]].lista_empleados)):
+            print(clubes[datos[1]].lista_empleados[j])
 
 def generarPago():
     montoInt = verificarNumeroInput(
@@ -448,8 +425,10 @@ def consultarPagos():
         nombreClub = input(
             'Nombre del club inexistente. Ingrese el club del que quiere consultar los pagos: ')
         datos = verificarExistenciaClub(nombreClub, clubes)
-    for j in range(len(clubes[datos[1]].lista_pagos)):
-        print(clubes[datos[1]].lista_pagos[j])
+    if len(clubes[datos[1]].lista_pagos) == 0:
+        print ("No hay pagos registrados en este club")
+        for j in range(len(clubes[datos[1]].lista_pagos)):
+            print(clubes[datos[1]].lista_pagos[j])
 
 def crearReserva():
     fecha = verificarInputConNumeros("Ingrese la fecha con el formato DD-MM-YYYY: ",
@@ -517,8 +496,10 @@ def consultarReservas():
                                                     "Codigo invalido. Ingrese el codigo de la instalacion que desea consultar las reservas: ")
         datos2 = verificarExistenciaInstalacion(
             codigoInstalacionInt, datos1[1], clubes)
-    for r in range(len(clubes[datos1[1]].lista_instalaciones[datos2[1]].lista_reservas)):
-        print(clubes[datos1[1]].lista_instalaciones[datos2[1]].lista_reservas[r])
+    if len(clubes[datos1[1]].lista_instalaciones[datos2[1]].lista_reservas) == 0:
+        print ("No hay reservas registradas en esta instalacion")
+        for r in range(len(clubes[datos1[1]].lista_instalaciones[datos2[1]].lista_reservas)):
+            print(clubes[datos1[1]].lista_instalaciones[datos2[1]].lista_reservas[r])
 
 def mostrarElDominioMenosUsadoEnCorreosDeInvitados():
     jsonData = jsonHandler('invitados.json')
